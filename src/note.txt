@@ -1,0 +1,13 @@
+从腾讯财经频道获取股票历史数据方法
+
+通过浏览器工具分析
+http://gu.qq.com/sh000001 得到上证指数历史数据
+http://data.gtimg.cn/flashdata/hushen/daily/91/sh000001.js
+http://data.gtimg.cn/flashdata/hushen/daily/92/sh000001.js
+...
+http://data.gtimg.cn/flashdata/hushen/daily/14/sh000001.js
+http://data.gtimg.cn/flashdata/hushen/daily/15/sh000001.js
+
+http://gu.qq.com/sz160615 得到鹏华沪深300指数(LOF)sz160615的数据
+http://stockjs.finance.qq.com/fundUnitNavAll/data/year_all/160615.js
+
