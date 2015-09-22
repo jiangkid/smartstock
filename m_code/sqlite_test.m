@@ -1,0 +1,11 @@
+close;
+clear;
+conn=database('stock.db','','','org.sqlite.JDBC','jdbc:sqlite:E:/workspace/smartstock/m_code/stock.db');
+curs=exec(conn,'select date, open, close, high, low from sh000300');
+curs=fetch(curs);
+data = cell2mat(curs.data(:,2:end));
+% plot(data);
+% xlim([0, length(data)+100]);
+mydate=datenum(cell2mat(curs.data(:,1)),'yymmdd');
+candle(data(:,3),data(:,4),data(:,2),data(:,1),'r',mydate,'yymmdd');% candle(HighPrices, LowPrices, ClosePrices, OpenPrices);
+close(conn);

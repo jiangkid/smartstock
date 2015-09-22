@@ -53,9 +53,9 @@ def parse_daily_data(raw_data):
     #100104 3289.75 3243.76 3295.28 3243.32 109447927    
     return daily_data
 
-def get_stock_data(db, stock_name):    
+def get_stock_data(db, stock_name, year_range):    
     db.create_table(stock_name)
-    for year in xrange(00, 16):
+    for year in xrange(year_range[0], year_range[1]+1):
         url = 'http://data.gtimg.cn/flashdata/hushen/daily/%02d/%s.js'%(year, stock_name)
         raw_data = requests.get(url).content
         if raw_data.find('404 Not Found') != -1:
@@ -73,9 +73,10 @@ if __name__ == '__main__':
 #         'request_id': 'mystock_405'
 #     }    
 #     raw_data = requests.session.get(url, params=params).content
-    db = DBClass()      
+    db = DBClass('stock.db')      
     stock_name_list = ['sh000001', 'sz399001', 'sh000300']
     for stock_name in stock_name_list:
-        get_stock_data(db, stock_name)
+        get_stock_data(db, stock_name, (90,99))
+        get_stock_data(db, stock_name, (00,15))
     db.close_db()
     
