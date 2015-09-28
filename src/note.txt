@@ -11,3 +11,5 @@ http://data.gtimg.cn/flashdata/hushen/daily/15/sh000001.js
 http://gu.qq.com/sz160615 得到鹏华沪深300指数(LOF)sz160615的数据
 http://stockjs.finance.qq.com/fundUnitNavAll/data/year_all/160615.js
 
+复权
+http://data.gtimg.cn/flashdata/hushen/fuquan/sh600640.js?maxage=6000000

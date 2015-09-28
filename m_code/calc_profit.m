@@ -3,8 +3,8 @@ function [ Return ] = calc_profit(pos,stock_price )
 %   Detailed explanation goes here
 Return=zeros(length(pos),1);
 %计算资金变化情况，
-% trade_rate = 0.0003;%交易成本假设为单边万三
-trade_rate = 0;%无交易成本
+trade_rate = 0.0003;%交易成本假设为单边万三
+% trade_rate = 0;%无交易成本
 Return(1)=1;
 for t=2:length(pos)
     %空仓且没有买入信号

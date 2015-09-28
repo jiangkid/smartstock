@@ -152,8 +152,8 @@ class GetStockData(object):
     def save_stock_data(self, stock_name):
         self.get_stock_sub_data(stock_name)
         self.db.create_stock_daily_table(stock_name)
-        year_list = range(00, 15+1)
-        year_list.extend(range(90, 99+1))
+        year_list = range(90, 99+1)
+        year_list.extend(range(00, 15+1))
         self.get_stock_data(stock_name, year_list)
         
     def get_all_code(self, url_str, db_flag=True):
