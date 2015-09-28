@@ -112,6 +112,10 @@ class RawDataParser(object):
         all_data = []
         for i in xrange(len(all_data_str)):
             str_temp = all_data_str[i].split()
+            if str_temp[0][0] == '9':
+                str_temp[0] = '19'+str_temp[0]
+            else:
+                str_temp[0] = '20'+str_temp[0]
             data_item = (str_temp[0], float(str_temp[1]), float(str_temp[2]), 
                          float(str_temp[3]), float(str_temp[4]), float(str_temp[4]))
             all_data.append(data_item)
@@ -148,8 +152,8 @@ class GetStockData(object):
     def save_stock_data(self, stock_name):
         self.get_stock_sub_data(stock_name)
         self.db.create_stock_daily_table(stock_name)
-        year_list = range(90, 99+1)
-        year_list.extend(range(00, 15+1))
+        year_list = range(00, 15+1)
+        year_list.extend(range(90, 99+1))
         self.get_stock_data(stock_name, year_list)
         
     def get_all_code(self, url_str, db_flag=True):
@@ -187,7 +191,7 @@ class GetStockData(object):
                 continue
             if raw_data.find('404 Not Found') != -1:
                 print 'Year %02d, stock %s, no data'%(year, stock_name)
-                continue        
+                continue
             data_list.extend(self.parser.parse_daily_data(raw_data)['data'])
         if db_flag == True and data_list:
             self.db.insert_stock_daily_record(stock_name, data_list)
