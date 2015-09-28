@@ -210,14 +210,6 @@ class GetStockData(object):
             self.db.insert_stock_sub_table(stock_name+'_sub', sub_list)
         return sub_list
 
-# def parse_test():
-#     raw_data = "list_data={t:'rankasz/chr',p:1,total:29,l:60,o:0,data:'sz000885,sz300475,sz300301,sz300349,sz002407,sz300235,sz000025,sz002734,sz002702,sz300480,sz300489,sz300462,sz002027,sz002087,sz000088,sz300380,sz300457,sz002533,sz000836,sz002489,sz002751,sz002276,sz002175,sz002411,sz300392,sz300431,sz300437,sz002738,sz002547,sz002640,sz002205,sz300229,sz300444,sz300109,sz300352,sz002442,sz002227,sz002207,sz300223,sz002691,sz000526,sz002497,sz002168,sz002607,sz000663,sz002460,sz000032,sz000034,sz300483,sz300208,sz002769,sz002055,sz300281,sz002709,sz000029,sz002076,sz002617,sz002594,sz300359,sz002466'};"
-#     print parse_data(raw_data)
-#     print parse_val(raw_data, "data")
-#     print parse_val(raw_data, "p")
-#     print parse_val(raw_data, "total")
-#     print parse_val(raw_data, "l")
-    
 if __name__ == '__main__':
 
 #     url = 'https://jy.yongjinbao.com.cn/winner_gj/gjzq/exchange.action'
