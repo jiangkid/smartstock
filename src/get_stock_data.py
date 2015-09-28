@@ -3,9 +3,30 @@
 @author: john
 '''
 import requests #使用web接口的类库
-import json #解析返回的json格式
 import re #格式化不正规的json字符串
 import sqlite3
+import sys
+import logging.handlers
+class mylogger(logging.Logger):
+    def __init__(self, LOG_FILE='temp.log', print_flag=1):
+        self.print_flag = print_flag
+        if LOG_FILE[-4:] != ".log":
+            LOG_FILE = LOG_FILE + ".log"
+        handler = logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes=1024 * 1024, backupCount=5)
+        fmt = '%(asctime)s - %(message)s'        
+        formatter = logging.Formatter(fmt)
+        handler.setFormatter(formatter)        
+        self.logger = logging.Logger('tst')
+        self.logger.addHandler(handler)  # 
+        self.logger.setLevel(logging.DEBUG)
+        print >> sys.stderr, 'log file: '+LOG_FILE    
+        self.logger.info('------log init------')
+        
+    def log(self, msg):
+        if self.print_flag == 1:
+            print msg
+        self.logger.info(msg)
+        
 class DBClass(object):
     def __init__(self,DB_SQLITE_NAME='stock.db'):
         try:
@@ -133,10 +154,14 @@ class RawDataParser(object):
     
 class GetStockData(object):
     def __init__(self,db_name='stock.db'):
+        self.logger = mylogger('stock.log')
         self.db = DBClass(db_name)
         self.db.create_SE_table()
         self.parser = RawDataParser()
-    
+        
+    def log(self, msg):
+        self.logger.log(msg)
+        
     def save_sh_stock(self):        
         sh_str = 'http://stock.gtimg.cn/data/view/rank.php?t=rankash/chr&p=%s&o=0&l=80&v=list_data' #上证
         all_sh_code = self.get_all_code(sh_str)        
@@ -151,10 +176,10 @@ class GetStockData(object):
             
     def save_stock_data(self, stock_name):
         self.get_stock_sub_data(stock_name)
-        self.db.create_stock_daily_table(stock_name)
-        year_list = range(90, 99+1)
-        year_list.extend(range(00, 15+1))
-        self.get_stock_data(stock_name, year_list)
+#         self.db.create_stock_daily_table(stock_name)
+#         year_list = range(90, 99+1)
+#         year_list.extend(range(00, 15+1))
+#         self.get_stock_data(stock_name, year_list)
         
     def get_all_code(self, url_str, db_flag=True):
         #获取股票代码
@@ -162,7 +187,7 @@ class GetStockData(object):
         try:        
             raw_data = requests.get(url_str%(1)).content
         except:
-            print 'requests.get error'
+            self.log('requests.get error')
             return code_list
             
         code_list.extend(self.parser.parse_code(raw_data))
@@ -171,7 +196,7 @@ class GetStockData(object):
             try:
                 raw_data = requests.get(url_str%(i)).content
             except:
-                print 'requests.get error'
+                self.log('requests.get error')
                 continue                
             code_list.extend(self.parser.parse_code(raw_data))
         if db_flag == True:                 
@@ -180,17 +205,17 @@ class GetStockData(object):
 
     def get_stock_data(self, stock_name, year_list, db_flag=True):
         #获取某股票数据
-        print 'getting data: %s'%(stock_name)
+        self.log('getting data: %s'%(stock_name))
         data_list = []
         for year in year_list:
             url = 'http://data.gtimg.cn/flashdata/hushen/daily/%02d/%s.js'%(year, stock_name)
             try:
                 raw_data = requests.get(url).content
             except:
-                print 'requests.get error'
+                self.log('stock %s, requests.get error'%(stock_name))
                 continue
             if raw_data.find('404 Not Found') != -1:
-                print 'Year %02d, stock %s, no data'%(year, stock_name)
+                self.log('Year %02d, stock %s, no data'%(year, stock_name))
                 continue
             data_list.extend(self.parser.parse_daily_data(raw_data)['data'])
         if db_flag == True and data_list:
@@ -204,10 +229,10 @@ class GetStockData(object):
         try:
             raw_data = requests.get(url).content
         except:
-            print 'requests.get error'
+            self.log('stock %s, requests.get error'%(stock_name))
             return sub_list        
         if raw_data.find('404 Not Found') != -1:
-            print 'stock %s, no data sub'%(stock_name)
+            self.log('stock %s, sub, no data'%(stock_name))
             return sub_list
         sub_list = self.parser.parse_sub_data(raw_data)
         if db_flag == True and sub_list:

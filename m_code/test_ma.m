@@ -1,17 +1,19 @@
 clear;
 % close all;
 stock_list = ['sh000300','sh000001','sz399001'];
-conn=database('temp.db','','','org.sqlite.JDBC','jdbc:sqlite:E:/workspace/smartstock/src/');
-curs=exec(conn,'select date,close from sh600017 order by date asc');
+conn=database('stock.db','','','org.sqlite.JDBC','jdbc:sqlite:E:/workspace/smartstock/src/');
+curs=exec(conn,'select date,close from sh000300 order by date asc');
 curs=fetch(curs);
 % clpr=stk_clpr(:,1);%提取收盘价
 % date=stk_clpr(:,2);%提取日期
 close_price=cell2mat(curs.data(:,2));
 all_date=datenum(cell2mat(curs.data(:,1)),'yyyymmdd');
 
-curs=exec(conn,'select date,pre_factor,post_factor from sh600017_sub order by date asc');
-curs=fetch(curs);
-close_price = sub_price(close_price, all_date, curs.data);
+% curs=exec(conn,'select date,pre_factor,post_factor from sh000300_sub order by date asc');%指数不需要复权
+% curs=fetch(curs);
+% if strcmp(curs.data,'No Data') ~= 1
+%     close_price = sub_price(close_price, all_date, curs.data);
+% end
 close(conn);
 % plot(all_date,close_price);hold on;plot(all_date,price_out);hold off;legend('org','sub');
 % datetick('x','yyyymmdd');
