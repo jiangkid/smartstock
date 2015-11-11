@@ -38,27 +38,27 @@ close(conn);
 % all_date = all_date(all_date<datenum(end_date,'yymmdd'));
 
 %均线
-ma_short_list = [5,10,15,20,30,60];
-ma_middle_list = [30,60,90,120,180];
-ma_long_list = [90,120,180,250];
-
-results = zeros(length(ma_short_list),length(ma_middle_list), length(ma_long_list));
-results_max = zeros(length(ma_short_list),length(ma_middle_list), length(ma_long_list));
-for S = 1:length(ma_short_list)
-    for M = 1:length(ma_middle_list)
-        parfor L = 1:length(ma_long_list)
-            MA_S = ma(close_price,ma_short_list(S));
-            MA_M = ma(close_price,ma_middle_list(M));
-            MA_L = ma(close_price,ma_long_list(L));
-            pos = cal_pos(close_price, MA_S, MA_M, MA_L);%获取买卖信号
-            profit_all = calc_profit(pos, close_price);
-            results(S,M,L) = profit_all(end);
-            results_max(S,M,L) = max(profit_all);
-        end
-    end
-end
-disp(max(max(max(results))));
-disp(max(max(max(results_max))));
+% ma_short_list = [5,10,15,20,30,60];
+% ma_middle_list = [30,60,90,120,180];
+% ma_long_list = [90,120,180,250];
+% 
+% results = zeros(length(ma_short_list),length(ma_middle_list), length(ma_long_list));
+% results_max = zeros(length(ma_short_list),length(ma_middle_list), length(ma_long_list));
+% for S = 1:length(ma_short_list)
+%     for M = 1:length(ma_middle_list)
+%         parfor L = 1:length(ma_long_list)
+%             MA_S = ma(close_price,ma_short_list(S));
+%             MA_M = ma(close_price,ma_middle_list(M));
+%             MA_L = ma(close_price,ma_long_list(L));
+%             pos = cal_pos(close_price, MA_S, MA_M, MA_L);%获取买卖信号
+%             profit_all = calc_profit(pos, close_price);
+%             results(S,M,L) = profit_all(end);
+%             results_max(S,M,L) = max(profit_all);
+%         end
+%     end
+% end
+% disp(max(max(max(results))));
+% disp(max(max(max(results_max))));
 
 MA_S = ma(close_price,5);
 MA_M = ma(close_price,60);
@@ -75,7 +75,7 @@ hold on;
 plot(all_date, MA_S);
 % plot(all_date, ma(close_price,30));
 plot(all_date, MA_M);
-plot(all_date, MA_L);
+% plot(all_date, MA_L);
 hold off;
 datetick('x','yyyymmdd');
 xlabel('Date');

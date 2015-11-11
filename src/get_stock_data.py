@@ -2,8 +2,8 @@
 '''
 @author: john
 '''
-import requests #使用web接口的类库
-import re #格式化不正规的json字符串
+import urllib2
+import re
 import sqlite3
 import sys
 import logging.handlers
@@ -176,16 +176,18 @@ class GetStockData(object):
             
     def save_stock_data(self, stock_name):
         self.get_stock_sub_data(stock_name)
-#         self.db.create_stock_daily_table(stock_name)
-#         year_list = range(90, 99+1)
-#         year_list.extend(range(00, 15+1))
-#         self.get_stock_data(stock_name, year_list)
+        self.db.create_stock_daily_table(stock_name)
+        year_list = range(90, 99+1)
+        year_list.extend(range(00, 15+1))
+        self.get_stock_data(stock_name, year_list)
         
     def get_all_code(self, url_str, db_flag=True):
         #获取股票代码
         code_list = []
-        try:        
-            raw_data = requests.get(url_str%(1)).content
+        try:
+            r = urllib2.urlopen(url_str%(1))
+            raw_data = r.read()
+#             raw_data = requests.get(url_str%(1)).content
         except:
             self.log('requests.get error')
             return code_list
@@ -194,7 +196,9 @@ class GetStockData(object):
         total = self.parser.parse_val(raw_data, 'total')
         for i in xrange(2,total+1):
             try:
-                raw_data = requests.get(url_str%(i)).content
+                r = urllib2.urlopen(url_str%(i))
+                raw_data = r.read()                
+#                 raw_data = requests.get(url_str%(i)).content
             except:
                 self.log('requests.get error')
                 continue                
@@ -209,8 +213,10 @@ class GetStockData(object):
         data_list = []
         for year in year_list:
             url = 'http://data.gtimg.cn/flashdata/hushen/daily/%02d/%s.js'%(year, stock_name)
-            try:
-                raw_data = requests.get(url).content
+            try:                
+                r = urllib2.urlopen(url)
+                raw_data = r.read()    
+#                 raw_data = requests.get(url).content
             except:
                 self.log('stock %s, requests.get error'%(stock_name))
                 continue
@@ -227,7 +233,9 @@ class GetStockData(object):
         self.db.create_stock_sub_table(stock_name+'_sub')
         url = 'http://data.gtimg.cn/flashdata/hushen/fuquan/%s.js'%(stock_name)
         try:
-            raw_data = requests.get(url).content
+            r = urllib2.urlopen(url)
+            raw_data = r.read()    
+#             raw_data = requests.get(url).content
         except:
             self.log('stock %s, requests.get error'%(stock_name))
             return sub_list        
@@ -253,6 +261,6 @@ if __name__ == '__main__':
     stock_obj = GetStockData()
     for stock_name in stock_name_list:
         stock_obj.save_stock_data(stock_name)
-    stock_obj.save_sh_stock()
-    stock_obj.save_sz_stock()
-    
+#     stock_obj.save_sh_stock()
+#     stock_obj.save_sz_stock()
+#     

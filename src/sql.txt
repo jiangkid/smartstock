@@ -1,0 +1,13 @@
+DROP TABLE sh000001;
+CREATE TABLE IF NOT EXISTS sh000001(
+        i_index INTEGER PRIMARY KEY, date TEXT UNIQUE, open REAL, close REAL, high REAL, low REAL, vol REAl
+        );
+		
+INSERT INTO sh000001(date, open, close, high, low, vol) values (100104, 3289.75, 3243.76, 3295.28, 3243.32, 109447927 );
+
+INSERT or IGNORE INTO sh000001(date, open, close, high, low, vol) values (100105, 3289.75, 3243.76, 3295.28, 3243.32, 109447927)
+
+ALTER TABLE sh000001
+ADD UNIQUE (date)
+
+CREATE UNIQUE INDEX t1b ON sh000001(date);

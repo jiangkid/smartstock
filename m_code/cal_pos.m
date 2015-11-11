@@ -4,11 +4,11 @@ pos=zeros(length(close_price),1);
 %策略计算
 for t=5:length(close_price)
     %定义买卖信号
-    signalBuy = (MA_S(t)>=MA_M(t)) && (MA_M(t)>=MA_L(t));
-    signalSell = (MA_S(t)<MA_M(t)) && (MA_M(t)<MA_L(t));
+%     signalBuy = (MA_S(t)>=MA_M(t)) && (MA_M(t)>=MA_L(t));
+%     signalSell = (MA_S(t)<MA_M(t)) && (MA_M(t)<MA_L(t));
     
-%     signalBuy = (MA_S(t)>=MA_M(t));
-%     signalSell = (MA_S(t)<MA_M(t));
+    signalBuy = (MA_S(t)>=MA_M(t));
+    signalSell = (MA_S(t)<MA_M(t));
     
     %如果是买入信号且为空仓，则买入
     if (signalBuy==1 && pos(t-1)==0)
