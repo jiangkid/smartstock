@@ -3,10 +3,11 @@
 @author: john
 '''
 import urllib2
-import re
 import sqlite3
 import sys
 import logging.handlers
+from RawDataParser import RawDataParser
+
 class mylogger(logging.Logger):
     def __init__(self, LOG_FILE='temp.log', print_flag=1):
         self.print_flag = print_flag
@@ -101,56 +102,6 @@ class DBClass(object):
         
     def close_db(self):
         self.sqlite_conn.close()
-
-class RawDataParser(object):
-    def __init__(self):
-        pass    
-    
-    def parse_val(self, raw_data, val_name):
-        ret_value = None
-        pattern = ',%s:\d+'%(val_name)
-        obj = re.search(pattern,raw_data)
-        if obj:
-            val_obj = re.search('[0-9]+', obj.group())
-            ret_value = int(val_obj.group())
-        return ret_value    
-    
-    def parse_code(self, raw_data):
-        code_list = []
-        code_str = raw_data[raw_data.find('data:')+6:-3]
-        code_str = code_str.split(',')
-        for item in code_str:
-            code_list.append((item,))
-        return code_list  
-    
-    def parse_daily_data(self, raw_data):
-        daily_data = {}
-        daily_data['name'] = raw_data[0:raw_data.find('=')]
-        daily_data['data_field'] = 'date open close high low vol'
-        all_data_str = raw_data[raw_data.find('=')+2:-2].split('\\n\\\n')
-        all_data_str.pop(0) #remove the first and the last empty item
-        all_data_str.pop()
-        all_data = []
-        for i in xrange(len(all_data_str)):
-            str_temp = all_data_str[i].split()
-            if str_temp[0][0] == '9':
-                str_temp[0] = '19'+str_temp[0]
-            else:
-                str_temp[0] = '20'+str_temp[0]
-            data_item = (str_temp[0], float(str_temp[1]), float(str_temp[2]), 
-                         float(str_temp[3]), float(str_temp[4]), float(str_temp[4]))
-            all_data.append(data_item)
-        daily_data['data'] = all_data
-        #日期        开盘        收盘        最高        最低        成交量(万)
-        #100104 3289.75 3243.76 3295.28 3243.32 109447927    
-        return daily_data
-     
-    def parse_sub_data(self, raw_data):
-        sub_list = []
-        all_data_str = raw_data[raw_data.find('=')+2:-2].split('^')
-        for item in all_data_str:
-            sub_list.append(tuple(item.split('~')))        
-        return sub_list
     
 class GetStockData(object):
     def __init__(self,db_name='stock.db'):
@@ -215,7 +166,7 @@ class GetStockData(object):
             url = 'http://data.gtimg.cn/flashdata/hushen/daily/%02d/%s.js'%(year, stock_name)
             try:                
                 r = urllib2.urlopen(url)
-                raw_data = r.read()    
+                raw_data = r.read()
 #                 raw_data = requests.get(url).content
             except:
                 self.log('stock %s, requests.get error'%(stock_name))
