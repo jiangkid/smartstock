@@ -39,7 +39,7 @@ nosetests.xml
 *.mat
 *.log
 *.rar
-.settings*
+.settings
 *.wav
 *.asv
 *.db
