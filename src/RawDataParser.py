@@ -44,7 +44,19 @@ class RawDataParser(object):
         #date    open    close    high    low    volume
         #100104 3289.75 3243.76 3295.28 3243.32 109447927    
         return daily_data
-     
+    
+    def parse_real_data(self, raw_data):
+        all_data_str = raw_data.split('~')
+        all_data_str.pop()
+        all_data_str.pop(0)
+        return all_data_str
+    
+    def parse_market_state(self, raw_data):        
+        if (raw_data.find('SH_close') != -1) and (raw_data.find('SZ_close') != -1):
+            return False 
+        elif (raw_data.find('SH_open') != -1) and (raw_data.find('SZ_open') != -1):
+            return True
+         
     def parse_sub_data(self, raw_data):
         sub_list = []
         all_data_str = raw_data[raw_data.find('=')+2:-2].split('^')
